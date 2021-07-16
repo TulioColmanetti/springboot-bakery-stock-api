@@ -1,5 +1,7 @@
 package com.projects.dev.tulio.springbootbakerystockapi.entity;
 
+import com.projects.dev.tulio.springbootbakerystockapi.enums.ProductCategory;
+import com.projects.dev.tulio.springbootbakerystockapi.enums.ProductSize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,11 +26,11 @@ public class Product {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String category;
+    private ProductCategory category;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String size;
+    private ProductSize size;
 
     @Column(nullable = false)
     private double cost;
