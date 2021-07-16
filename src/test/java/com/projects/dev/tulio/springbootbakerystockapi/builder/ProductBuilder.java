@@ -32,7 +32,7 @@ public class ProductBuilder {
     @Builder.Default
     private int quantity = 15;
 
-    public Product createBeer(){
+    public Product createProduct(){
         return new Product(id,name,description,category,size,cost,max,quantity);
     }
 }
