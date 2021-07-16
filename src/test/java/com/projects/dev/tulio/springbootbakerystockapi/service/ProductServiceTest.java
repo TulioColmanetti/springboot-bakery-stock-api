@@ -36,6 +36,7 @@ class ProductServiceTest {
 //        then
         Product savedProduct = productService.createProduct(expectedSavedProduct);
 
+        assertThat(savedProduct.getId(), is(equalTo(expectedSavedProduct.getId())));
         assertThat(savedProduct.getName(), is(equalTo(expectedSavedProduct.getName())));
     }
 
