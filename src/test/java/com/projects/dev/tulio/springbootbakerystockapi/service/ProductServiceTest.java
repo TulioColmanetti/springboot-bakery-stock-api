@@ -26,7 +26,7 @@ class ProductServiceTest {
     ProductService productService;
 
     @Test
-    void whenProductInformedThenItShouldCreated(){
+    void whenProductInformedThenItShouldBeCreated(){
 //        given
         Product expectedSavedProduct = ProductBuilder.builder().build().createProduct();
 
