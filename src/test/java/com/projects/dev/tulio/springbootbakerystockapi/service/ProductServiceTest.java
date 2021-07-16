@@ -3,14 +3,18 @@ package com.projects.dev.tulio.springbootbakerystockapi.service;
 import com.projects.dev.tulio.springbootbakerystockapi.builder.ProductBuilder;
 import com.projects.dev.tulio.springbootbakerystockapi.entity.Product;
 import com.projects.dev.tulio.springbootbakerystockapi.repository.ProductRepository;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.*;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -32,6 +36,7 @@ class ProductServiceTest {
 //        then
         Product savedProduct = productService.createProduct(expectedSavedProduct);
 
+        assertThat(savedProduct.getName(), is(equalTo(expectedSavedProduct.getName())));
     }
 
 }
