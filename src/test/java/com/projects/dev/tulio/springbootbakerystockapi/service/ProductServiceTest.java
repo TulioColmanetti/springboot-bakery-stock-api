@@ -1,15 +1,15 @@
 package com.projects.dev.tulio.springbootbakerystockapi.service;
 
-import com.projects.dev.tulio.springbootbakerystockapi.builder.ProductBuilder;
+import com.projects.dev.tulio.springbootbakerystockapi.builder.ProductDTOBuilder;
+import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
 import com.projects.dev.tulio.springbootbakerystockapi.entity.Product;
+import com.projects.dev.tulio.springbootbakerystockapi.mapper.ProductMapper;
 import com.projects.dev.tulio.springbootbakerystockapi.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -21,6 +21,8 @@ class ProductServiceTest {
 
     @Mock
     ProductRepository productRepository;
+
+    private ProductMapper productMapper = ProductMapper.INSTANCE;
 
     @InjectMocks
     ProductService productService;
