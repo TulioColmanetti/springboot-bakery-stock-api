@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ProductService {
 
-    private ProductRepository productRepository;
-    private ProductMapper productMapper = ProductMapper.INSTANCE;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper = ProductMapper.INSTANCE;
 
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = productMapper.toModel(productDTO);

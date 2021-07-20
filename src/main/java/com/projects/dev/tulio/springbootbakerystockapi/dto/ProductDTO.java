@@ -38,13 +38,13 @@ public class ProductDTO {
     @NotNull
     @DecimalMin(value = "0.1")
     @DecimalMax(value = "10000")
-    private double cost;
+    private Double cost;
 
     @NotNull
     @Max(800)
-    private int max;
+    private Integer max;
 
     @NotNull
     @Max(50)
-    private int quantity;
+    private Integer quantity;
 }

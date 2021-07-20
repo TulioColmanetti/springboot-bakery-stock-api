@@ -1,32 +1,26 @@
 package com.projects.dev.tulio.springbootbakerystockapi.controller;
 
-import com.projects.dev.tulio.springbootbakerystockapi.builder.ProductBuilder;
-import com.projects.dev.tulio.springbootbakerystockapi.entity.Product;
+import com.projects.dev.tulio.springbootbakerystockapi.builder.ProductDTOBuilder;
+import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
 import com.projects.dev.tulio.springbootbakerystockapi.service.ProductService;
-import com.projects.dev.tulio.springbootbakerystockapi.utils.JsonConversionUtils;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.json.JsonContent;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
-import static com.projects.dev.tulio.springbootbakerystockapi.utils.JsonConversionUtils.*;
-import static org.hamcrest.Matchers.*;
+import static com.projects.dev.tulio.springbootbakerystockapi.utils.JsonConversionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 class ProductControllerTest {
@@ -52,17 +46,17 @@ class ProductControllerTest {
     @Test
     void whenPOSTIsCalledThenAProductIsCreated() throws Exception {
 //        given
-        Product expectedCreatedProduct = ProductBuilder.builder().build().createProduct();
+        ProductDTO productDTO = ProductDTOBuilder.builder().build().toProductDTO();
 
 //        when
-        when(productService.createProduct(expectedCreatedProduct)).thenReturn(expectedCreatedProduct);
+        when(productService.createProduct(productDTO)).thenReturn(productDTO);
 
 //        then
         mockMvc.perform(post(PRODUCTS_API_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(expectedCreatedProduct)))
+                .content(asJsonString(productDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is(expectedCreatedProduct.getName())))
-                .andExpect(jsonPath("$.category", is(expectedCreatedProduct.getCategory().toString())));
+                .andExpect(jsonPath("$.name", is(productDTO.getName())))
+                .andExpect(jsonPath("$.category", is(productDTO.getCategory().toString())));
     }
 }
