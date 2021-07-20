@@ -57,6 +57,7 @@ class ProductControllerTest {
                 .content(asJsonString(productDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", is(productDTO.getName())))
-                .andExpect(jsonPath("$.category", is(productDTO.getCategory().toString())));
+                .andExpect(jsonPath("$.category", is(productDTO.getCategory().toString())))
+                .andExpect(jsonPath("$.size", is(productDTO.getSize().toString())));
     }
 }
