@@ -4,6 +4,7 @@ import com.projects.dev.tulio.springbootbakerystockapi.builder.ProductDTOBuilder
 import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
 import com.projects.dev.tulio.springbootbakerystockapi.entity.Product;
 import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductAlreadyRegisteredException;
+import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductNotFoundException;
 import com.projects.dev.tulio.springbootbakerystockapi.mapper.ProductMapper;
 import com.projects.dev.tulio.springbootbakerystockapi.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
