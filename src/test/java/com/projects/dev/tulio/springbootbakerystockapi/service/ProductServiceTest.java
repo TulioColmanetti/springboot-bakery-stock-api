@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -26,16 +28,17 @@ class ProductServiceTest {
     @Test
     void whenProductInformedThenItShouldBeCreated(){
 //        given
-        Product expectedSavedProduct = ProductBuilder.builder().build().createProduct();
+        ProductDTO expectedProductDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        Product expectedSavedProduct = productMapper.toModel(expectedProductDTO);
 
 //        when
         when(productRepository.save(expectedSavedProduct)).thenReturn(expectedSavedProduct);
 
 //        then
-        Product savedProduct = productService.createProduct(expectedSavedProduct);
+        ProductDTO createdProductDTO = productService.createProduct(expectedProductDTO);
 
-        assertThat(savedProduct.getId(), is(equalTo(expectedSavedProduct.getId())));
-        assertThat(savedProduct.getName(), is(equalTo(expectedSavedProduct.getName())));
+        assertThat(createdProductDTO.getId(), is(equalTo(expectedProductDTO.getId())));
+        assertThat(createdProductDTO.getName(), is(equalTo(expectedProductDTO.getName())));
     }
 
 }
