@@ -23,6 +23,7 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import static com.projects.dev.tulio.springbootbakerystockapi.utils.JsonConversionUtils.*;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -61,6 +62,7 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(expectedCreatedProduct)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", is(expectedCreatedProduct.getName())));
+                .andExpect(jsonPath("$.name", is(expectedCreatedProduct.getName())))
+                .andExpect(jsonPath("$.category", is(expectedCreatedProduct.getCategory().toString())));
     }
 }
