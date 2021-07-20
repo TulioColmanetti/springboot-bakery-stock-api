@@ -45,6 +45,7 @@ class ProductServiceTest {
 
         assertThat(createdProductDTO.getId(), is(equalTo(expectedProductDTO.getId())));
         assertThat(createdProductDTO.getName(), is(equalTo(expectedProductDTO.getName())));
+        assertThat(createdProductDTO.getQuantity(), is(equalTo(expectedProductDTO.getQuantity())));
     }
 
 }
