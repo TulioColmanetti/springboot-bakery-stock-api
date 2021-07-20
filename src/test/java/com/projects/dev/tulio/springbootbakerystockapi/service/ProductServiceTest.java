@@ -48,4 +48,18 @@ class ProductServiceTest {
         assertThat(createdProductDTO.getQuantity(), is(equalTo(expectedProductDTO.getQuantity())));
     }
 
+    @Test
+    void whenValidProductNameIsGivenThenReturnAProduct() throws ProductNotFoundException {
+//         given
+        ProductDTO expectedFoundProductDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        Product expectedFoundProduct = productMapper.toModel(expectedFoundProductDTO);
+
+//         when
+        when(productRepository.findByName(expectedFoundProduct.getName())).thenReturn(Optional.of(expectedFoundProduct));
+
+//         then
+        ProductDTO foundProductDTO = productService.findByName(expectedFoundProductDTO.getName());
+
+        assertThat(foundProductDTO, is(equalTo(expectedFoundProductDTO)));
+    }
 }
