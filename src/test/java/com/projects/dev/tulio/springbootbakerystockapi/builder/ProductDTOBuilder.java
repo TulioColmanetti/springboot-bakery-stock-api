@@ -1,12 +1,12 @@
 package com.projects.dev.tulio.springbootbakerystockapi.builder;
 
-import com.projects.dev.tulio.springbootbakerystockapi.entity.Product;
+import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
 import com.projects.dev.tulio.springbootbakerystockapi.enums.ProductCategory;
 import com.projects.dev.tulio.springbootbakerystockapi.enums.ProductSize;
 import lombok.Builder;
 
 @Builder
-public class ProductBuilder {
+public class ProductDTOBuilder {
 
     @Builder.Default
     private Long id = 1L;
@@ -32,7 +32,7 @@ public class ProductBuilder {
     @Builder.Default
     private int quantity = 15;
 
-    public Product createProduct(){
-        return new Product(id,name,description,category,size,cost,max,quantity);
+    public ProductDTO toProductDTO(){
+        return new ProductDTO(id,name,description,category,size,cost,max,quantity);
     }
 }
