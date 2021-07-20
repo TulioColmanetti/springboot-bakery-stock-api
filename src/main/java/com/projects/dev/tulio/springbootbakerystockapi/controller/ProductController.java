@@ -1,6 +1,6 @@
 package com.projects.dev.tulio.springbootbakerystockapi.controller;
 
-import com.projects.dev.tulio.springbootbakerystockapi.entity.Product;
+import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
 import com.projects.dev.tulio.springbootbakerystockapi.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,11 @@ import javax.validation.Valid;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product createProduct(@RequestBody @Valid Product product) {
-        return productService.createProduct(product);
+    public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) {
+        return productService.createProduct(productDTO);
     }
 }
