@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -27,5 +28,10 @@ public class ProductController {
     @GetMapping("/{name}")
     public ProductDTO findByName(@PathVariable String name) throws ProductNotFoundException {
         return productService.findByName(name);
+    }
+
+    @GetMapping
+    public List<ProductDTO> listProducts() {
+        return productService.listAll();
     }
 }
