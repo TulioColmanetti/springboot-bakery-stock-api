@@ -60,4 +60,17 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.category", is(productDTO.getCategory().toString())))
                 .andExpect(jsonPath("$.size", is(productDTO.getSize().toString())));
     }
+
+    @Test
+    void whenPOSTIsCalledWithoutRequiredFieldThenAnErrorIsReturned() throws Exception {
+        // given
+        ProductDTO productDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        productDTO.setCategory(null);
+
+        // then
+        mockMvc.perform(post(PRODUCTS_API_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(productDTO)))
+                .andExpect(status().isBadRequest());
+    }
 }
