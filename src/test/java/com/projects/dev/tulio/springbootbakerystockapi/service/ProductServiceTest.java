@@ -155,4 +155,15 @@ class ProductServiceTest {
         assertThat(expectedQuantityAfterIncrement, equalTo(incrementedProductDTO.getQuantity()));
         assertThat(expectedQuantityAfterIncrement, lessThan(expectedProductDTO.getMax()));
     }
+
+    @Test
+    void whenIncrementIsGreaterThanMaxThenThrowException() {
+        ProductDTO expectedProductDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        Product expectedProduct = productMapper.toModel(expectedProductDTO);
+
+        when(productRepository.findById(expectedProductDTO.getId())).thenReturn(Optional.of(expectedProduct));
+
+        int quantityToIncrement = 80;
+        assertThrows(ProductStockExceededException.class, () -> productService.increment(expectedProductDTO.getId(), quantityToIncrement));
+    }
 }
