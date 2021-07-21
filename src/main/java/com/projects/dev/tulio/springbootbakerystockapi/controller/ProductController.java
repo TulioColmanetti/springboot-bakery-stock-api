@@ -2,6 +2,7 @@ package com.projects.dev.tulio.springbootbakerystockapi.controller;
 
 import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
 import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductAlreadyRegisteredException;
+import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductNotFoundException;
 import com.projects.dev.tulio.springbootbakerystockapi.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,10 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDTO createProduct(@RequestBody @Valid ProductDTO productDTO) throws ProductAlreadyRegisteredException {
         return productService.createProduct(productDTO);
+    }
+
+    @GetMapping("/{name}")
+    public ProductDTO findByName(@PathVariable String name) throws ProductNotFoundException {
+        return productService.findByName(name);
     }
 }
