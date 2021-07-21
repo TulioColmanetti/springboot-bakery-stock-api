@@ -13,11 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -88,5 +90,21 @@ class ProductServiceTest {
 
         // then
         assertThrows(ProductNotFoundException.class, () -> productService.findByName(expectedFoundProductDTO.getName()));
+    }
+
+    @Test
+    void whenListProductIsCalledThenReturnAListOfProducts() {
+        // given
+        ProductDTO expectedFoundProductDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        Product expectedFoundProduct = productMapper.toModel(expectedFoundProductDTO);
+
+        //when
+        when(productRepository.findAll()).thenReturn(Collections.singletonList(expectedFoundProduct));
+
+        //then
+        List<ProductDTO> foundListProductsDTO = productService.listAll();
+
+        assertThat(foundListProductsDTO, is(not(empty())));
+        assertThat(foundListProductsDTO.get(0), is(equalTo(expectedFoundProductDTO)));
     }
 }
