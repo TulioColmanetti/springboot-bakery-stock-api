@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import java.util.Collections;
+
 import static com.projects.dev.tulio.springbootbakerystockapi.utils.JsonConversionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -105,5 +107,22 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(PRODUCTS_API_PATH + "/" + productDTO.getName())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void whenGETListWithProductsIsCalledThenOkStatusIsReturned() throws Exception {
+        // given
+        ProductDTO productDTO = ProductDTOBuilder.builder().build().toProductDTO();
+
+        //when
+        when(productService.listAll()).thenReturn(Collections.singletonList(productDTO));
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUCTS_API_PATH)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name", is(productDTO.getName())))
+                .andExpect(jsonPath("$[0].category", is(productDTO.getCategory().toString())))
+                .andExpect(jsonPath("$[0].size", is(productDTO.getSize().toString())));
     }
 }
