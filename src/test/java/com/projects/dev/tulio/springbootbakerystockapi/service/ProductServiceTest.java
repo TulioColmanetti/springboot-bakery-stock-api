@@ -19,10 +19,8 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.empty;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -135,5 +133,25 @@ class ProductServiceTest {
 
         verify(productRepository, times(1)).findById(expectedDeletedProductDTO.getId());
         verify(productRepository, times(1)).deleteById(expectedDeletedProductDTO.getId());
+    }
+
+    @Test
+    void whenIncrementIsCalledThenIncrementProductStock() throws ProductNotFoundException, ProductStockExceededException {
+        //given
+        ProductDTO expectedProductDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        Product expectedProduct = productMapper.toModel(expectedProductDTO);
+
+        //when
+        when(productRepository.findById(expectedProductDTO.getId())).thenReturn(Optional.of(expectedProduct));
+        when(productRepository.save(expectedProduct)).thenReturn(expectedProduct);
+
+        int quantityToIncrement = 10;
+        int expectedQuantityAfterIncrement = expectedProductDTO.getQuantity() + quantityToIncrement;
+
+        // then
+        ProductDTO incrementedProductDTO = productService.increment(expectedProductDTO.getId(), quantityToIncrement);
+
+        assertThat(expectedQuantityAfterIncrement, equalTo(incrementedProductDTO.getQuantity()));
+        assertThat(expectedQuantityAfterIncrement, lessThan(expectedProductDTO.getMax()));
     }
 }
