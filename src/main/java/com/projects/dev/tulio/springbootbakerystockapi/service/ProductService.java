@@ -10,7 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -37,5 +39,12 @@ public class ProductService {
         if (optSavedProduct.isPresent()) {
             throw new ProductAlreadyRegisteredException(name);
         }
+    }
+
+    public List<ProductDTO> listAll() {
+        return productRepository.findAll()
+                .stream()
+                .map(productMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }
