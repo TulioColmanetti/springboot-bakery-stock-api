@@ -26,6 +26,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
 
+    private static final long INVALID_PRODUCT_ID = 1L;
+    
     @Mock
     ProductRepository productRepository;
 
@@ -176,5 +178,14 @@ class ProductServiceTest {
 
         int quantityToIncrement = 45;
         assertThrows(ProductStockExceededException.class, () -> productService.increment(expectedProductDTO.getId(), quantityToIncrement));
+    }
+
+    @Test
+    void whenIncrementIsCalledWithInvalidIdThenThrowException() {
+        int quantityToIncrement = 10;
+
+        when(productRepository.findById(INVALID_PRODUCT_ID)).thenReturn(Optional.empty());
+
+        assertThrows(ProductNotFoundException.class, () -> productService.increment(INVALID_PRODUCT_ID, quantityToIncrement));
     }
 }
