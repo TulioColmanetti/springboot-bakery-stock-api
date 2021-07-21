@@ -30,7 +30,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     private static final String PRODUCTS_API_PATH = "/api/v1/products";
+    private static final long VALID_PRODUCT_ID = 1L;
     private static final long INVALID_PRODUCT_ID = 2l;
+    private static final String PRODUCT_API_SUBPATH_INCREMENT_URL = "/increment";
 
     private MockMvc mockMvc;
 
@@ -164,5 +166,25 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete(PRODUCTS_API_PATH + "/" + INVALID_PRODUCT_ID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void whenPATCHIsCalledToIncrementDiscountThenOKstatusIsReturned() throws Exception {
+        QuantityDTO quantityDTO = QuantityDTO.builder()
+                .quantity(10)
+                .build();
+
+        ProductDTO productDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        productDTO.setQuantity(productDTO.getQuantity() + quantityDTO.getQuantity());
+
+        when(productService.increment(VALID_PRODUCT_ID, quantityDTO.getQuantity())).thenReturn(productDTO);
+
+        mockMvc.perform(MockMvcRequestBuilders.patch(PRODUCTS_API_PATH + "/" + VALID_PRODUCT_ID + PRODUCT_API_SUBPATH_INCREMENT_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(quantityDTO))).andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(productDTO.getName())))
+                .andExpect(jsonPath("$.category", is(productDTO.getCategory().toString())))
+                .andExpect(jsonPath("$.size", is(productDTO.getSize().toString())))
+                .andExpect(jsonPath("$.quantity", is(productDTO.getQuantity())));
     }
 }
