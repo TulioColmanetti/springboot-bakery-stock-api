@@ -21,7 +21,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.empty;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -117,5 +118,22 @@ class ProductServiceTest {
         List<ProductDTO> foundListProductsDTO = productService.listAll();
 
         assertThat(foundListProductsDTO, is(empty()));
+    }
+
+    @Test
+    void whenExclusionIsCalledWithValidIdThenAProductShouldBeDeleted() throws ProductNotFoundException{
+        // given
+        ProductDTO expectedDeletedProductDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        Product expectedDeletedProduct = productMapper.toModel(expectedDeletedProductDTO);
+
+        // when
+        when(productRepository.findById(expectedDeletedProductDTO.getId())).thenReturn(Optional.of(expectedDeletedProduct));
+        doNothing().when(productRepository).deleteById(expectedDeletedProductDTO.getId());
+
+        // then
+        productService.deleteById(expectedDeletedProductDTO.getId());
+
+        verify(productRepository, times(1)).findById(expectedDeletedProductDTO.getId());
+        verify(productRepository, times(1)).deleteById(expectedDeletedProductDTO.getId());
     }
 }
