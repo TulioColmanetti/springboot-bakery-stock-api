@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
@@ -72,5 +73,22 @@ class ProductControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(productDTO)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void whenGETIsCalledWithValidNameThenOkStatusIsReturned() throws Exception {
+        // given
+        ProductDTO productDTO = ProductDTOBuilder.builder().build().toProductDTO();
+
+        //when
+        when(productService.findByName(productDTO.getName())).thenReturn(productDTO);
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUCTS_API_PATH + "/" + productDTO.getName())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(productDTO.getName())))
+                .andExpect(jsonPath("$.category", is(productDTO.getCategory().toString())))
+                .andExpect(jsonPath("$.size", is(productDTO.getSize().toString())));
     }
 }
