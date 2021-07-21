@@ -34,4 +34,10 @@ public class ProductController {
     public List<ProductDTO> listProducts() {
         return productService.listAll();
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Long id) throws ProductNotFoundException {
+        productService.deleteById(id);
+    }
 }
