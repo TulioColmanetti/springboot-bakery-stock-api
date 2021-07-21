@@ -77,4 +77,16 @@ class ProductServiceTest {
 
         assertThat(foundProductDTO, is(equalTo(expectedFoundProductDTO)));
     }
+
+    @Test
+    void whenNotRegisteredProductNameIsGivenThenThrowAnException() {
+        // given
+        ProductDTO expectedFoundProductDTO = ProductDTOBuilder.builder().build().toProductDTO();
+
+        // when
+        when(productRepository.findByName(expectedFoundProductDTO.getName())).thenReturn(Optional.empty());
+
+        // then
+        assertThrows(ProductNotFoundException.class, () -> productService.findByName(expectedFoundProductDTO.getName()));
+    }
 }
