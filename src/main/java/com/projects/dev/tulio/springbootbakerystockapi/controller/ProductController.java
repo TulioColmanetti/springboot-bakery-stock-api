@@ -1,8 +1,10 @@
 package com.projects.dev.tulio.springbootbakerystockapi.controller;
 
 import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
+import com.projects.dev.tulio.springbootbakerystockapi.dto.QuantityDTO;
 import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductAlreadyRegisteredException;
 import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductNotFoundException;
+import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductStockExceededException;
 import com.projects.dev.tulio.springbootbakerystockapi.service.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +41,10 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable Long id) throws ProductNotFoundException {
         productService.deleteById(id);
+    }
+
+    @PatchMapping("/{id}/increment")
+    public ProductDTO increment(@PathVariable Long id, @RequestBody @Valid QuantityDTO quantityDTO) throws ProductNotFoundException, ProductStockExceededException {
+        return productService.increment(id, quantityDTO.getQuantity());
     }
 }
