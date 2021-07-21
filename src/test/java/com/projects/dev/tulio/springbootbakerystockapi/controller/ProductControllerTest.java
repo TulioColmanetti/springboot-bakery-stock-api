@@ -21,8 +21,7 @@ import java.util.Collections;
 
 import static com.projects.dev.tulio.springbootbakerystockapi.utils.JsonConversionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ProductControllerTest {
 
     private static final String PRODUCTS_API_PATH = "/api/v1/products";
+    private static final long INVALID_PRODUCT_ID = 2l;
 
     private MockMvc mockMvc;
 
@@ -153,5 +153,16 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete(PRODUCTS_API_PATH + "/" + productDTO.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void whenDELETEIsCalledWithInvalidIdThenNotFoundStatusIsReturned() throws Exception {
+        //when
+        doThrow(ProductNotFoundException.class).when(productService).deleteById(INVALID_PRODUCT_ID);
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.delete(PRODUCTS_API_PATH + "/" + INVALID_PRODUCT_ID)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
