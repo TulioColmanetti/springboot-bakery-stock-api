@@ -2,6 +2,7 @@ package com.projects.dev.tulio.springbootbakerystockapi.controller;
 
 import com.projects.dev.tulio.springbootbakerystockapi.builder.ProductDTOBuilder;
 import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
+import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductNotFoundException;
 import com.projects.dev.tulio.springbootbakerystockapi.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,5 +91,19 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.name", is(productDTO.getName())))
                 .andExpect(jsonPath("$.category", is(productDTO.getCategory().toString())))
                 .andExpect(jsonPath("$.size", is(productDTO.getSize().toString())));
+    }
+
+    @Test
+    void whenGETIsCalledWithoutRegisteredNameThenNotFoundStatusIsReturned() throws Exception {
+        // given
+        ProductDTO productDTO = ProductDTOBuilder.builder().build().toProductDTO();
+
+        //when
+        when(productService.findByName(productDTO.getName())).thenThrow(ProductNotFoundException.class);
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUCTS_API_PATH + "/" + productDTO.getName())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
