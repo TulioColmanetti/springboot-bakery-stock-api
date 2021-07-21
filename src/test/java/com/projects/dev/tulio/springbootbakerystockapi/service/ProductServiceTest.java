@@ -107,4 +107,15 @@ class ProductServiceTest {
         assertThat(foundListProductsDTO, is(not(empty())));
         assertThat(foundListProductsDTO.get(0), is(equalTo(expectedFoundProductDTO)));
     }
+
+    @Test
+    void whenListProductIsCalledThenReturnAnEmptyListOfProducts() {
+        //when
+        when(productRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+
+        //then
+        List<ProductDTO> foundListProductsDTO = productService.listAll();
+
+        assertThat(foundListProductsDTO, is(empty()));
+    }
 }
