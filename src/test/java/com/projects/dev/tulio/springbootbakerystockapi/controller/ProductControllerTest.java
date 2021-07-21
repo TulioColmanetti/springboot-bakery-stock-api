@@ -125,4 +125,18 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[0].category", is(productDTO.getCategory().toString())))
                 .andExpect(jsonPath("$[0].size", is(productDTO.getSize().toString())));
     }
+
+    @Test
+    void whenGETListWithoutProductsIsCalledThenOkStatusIsReturned() throws Exception {
+        // given
+        ProductDTO productDTO = ProductDTOBuilder.builder().build().toProductDTO();
+
+        //when
+        when(productService.listAll()).thenReturn(Collections.singletonList(productDTO));
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.get(PRODUCTS_API_PATH)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
