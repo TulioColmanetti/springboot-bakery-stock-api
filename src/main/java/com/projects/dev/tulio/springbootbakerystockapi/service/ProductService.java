@@ -34,6 +34,18 @@ public class ProductService {
         return productMapper.toDTO(foundProduct);
     }
 
+    public List<ProductDTO> listAll() {
+        return productRepository.findAll()
+                .stream()
+                .map(productMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public void deleteById(Long id) throws ProductNotFoundException {
+        verifyIfExists(id);
+        productRepository.deleteById(id);
+    }
+
     private void verifyIfIsAlreadyRegistered(String name) throws ProductAlreadyRegisteredException {
         Optional<Product> optSavedProduct = productRepository.findByName(name);
         if (optSavedProduct.isPresent()) {
@@ -41,10 +53,8 @@ public class ProductService {
         }
     }
 
-    public List<ProductDTO> listAll() {
-        return productRepository.findAll()
-                .stream()
-                .map(productMapper::toDTO)
-                .collect(Collectors.toList());
+    private Product verifyIfExists(Long id) throws ProductNotFoundException {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 }
