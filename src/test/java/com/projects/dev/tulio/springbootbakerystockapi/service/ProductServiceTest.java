@@ -18,6 +18,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +48,19 @@ class ProductServiceTest {
         assertThat(createdProductDTO.getId(), is(equalTo(expectedProductDTO.getId())));
         assertThat(createdProductDTO.getName(), is(equalTo(expectedProductDTO.getName())));
         assertThat(createdProductDTO.getQuantity(), is(equalTo(expectedProductDTO.getQuantity())));
+    }
+
+    @Test
+    void whenAlreadyRegisteredProductInformedThenAnExceptionShouldBeThrown() {
+        // given
+        ProductDTO expectedProductDTO = ProductDTOBuilder.builder().build().toProductDTO();
+        Product duplicatedProduct = productMapper.toModel(expectedProductDTO);
+
+        // when
+        when(productRepository.findByName(expectedProductDTO.getName())).thenReturn(Optional.of(duplicatedProduct));
+
+        // then
+        assertThrows(ProductAlreadyRegisteredException.class, () -> productService.createProduct(expectedProductDTO));
     }
 
     @Test
