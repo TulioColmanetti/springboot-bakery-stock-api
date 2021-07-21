@@ -4,6 +4,7 @@ import com.projects.dev.tulio.springbootbakerystockapi.dto.ProductDTO;
 import com.projects.dev.tulio.springbootbakerystockapi.entity.Product;
 import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductAlreadyRegisteredException;
 import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductNotFoundException;
+import com.projects.dev.tulio.springbootbakerystockapi.exception.ProductStockExceededException;
 import com.projects.dev.tulio.springbootbakerystockapi.mapper.ProductMapper;
 import com.projects.dev.tulio.springbootbakerystockapi.repository.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -56,5 +57,16 @@ public class ProductService {
     private Product verifyIfExists(Long id) throws ProductNotFoundException {
         return productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    public ProductDTO increment(Long id, int quantityToIncrement) throws ProductNotFoundException, ProductStockExceededException {
+        Product productToIncrementStock = verifyIfExists(id);
+        int quantityAfterIncrement = quantityToIncrement + productToIncrementStock.getQuantity();
+        if (quantityAfterIncrement <= productToIncrementStock.getMax()) {
+            productToIncrementStock.setQuantity(productToIncrementStock.getQuantity() + quantityToIncrement);
+            Product incrementedProductStock = productRepository.save(productToIncrementStock);
+            return productMapper.toDTO(incrementedProductStock);
+        }
+        throw new ProductStockExceededException(id, quantityToIncrement);
     }
 }
