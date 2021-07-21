@@ -21,6 +21,7 @@ import java.util.Collections;
 
 import static com.projects.dev.tulio.springbootbakerystockapi.utils.JsonConversionUtils.asJsonString;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -138,5 +139,19 @@ class ProductControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(PRODUCTS_API_PATH)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void whenDELETEIsCalledWithValidIdThenNoContentStatusIsReturned() throws Exception {
+        // given
+        ProductDTO productDTO = ProductDTOBuilder.builder().build().toProductDTO();
+
+        //when
+        doNothing().when(productService).deleteById(productDTO.getId());
+
+        // then
+        mockMvc.perform(MockMvcRequestBuilders.delete(PRODUCTS_API_PATH + "/" + productDTO.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
     }
 }
